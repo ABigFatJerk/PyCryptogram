@@ -30,6 +30,17 @@ class Cryptogram(object):
         for new_letter_view in self._letter_dict[self._selected_letter]:
             new_letter_view.select()
 
+    def handle_key_press(self, event):
+        if self._selected_letter is None:
+            return
+        key = event.char.upper()
+        if key in ALPHABET:
+            for selected_letter_view in self._letter_dict[self._selected_letter]:
+                selected_letter_view.set_plaintext_letter(key)
+        elif event.keysym == 'Delete':
+            for selected_letter_view in self._letter_dict[self._selected_letter]:
+                selected_letter_view.set_plaintext_letter('?')  # TODO very similar to above
+
 if __name__ == '__main__':
     root = Tkinter.Tk()
     cryptogram = Cryptogram(root)

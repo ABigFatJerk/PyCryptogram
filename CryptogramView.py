@@ -2,12 +2,15 @@ import Tkinter
 import Cryptogram
 
 LETTER_WIDTH = 13
+BASE_COLOR = 'gray80'
+SELECTED_COLOR = 'yellow'
 
 
 class CryptogramView(object):
     def __init__(self, controller, parent):
         self._controller = controller
         self._parent = parent
+        self._parent.bind_all('<Any-KeyPress>', self.on_keypress)
         self._key_frame = Tkinter.Frame(parent)
         self._key_view = KeyView(self._key_frame, self._controller)
         self._grid_frame = Tkinter.Frame(parent)
@@ -15,6 +18,9 @@ class CryptogramView(object):
         self._key_frame.grid(row=0, column=0)
         Tkinter.Label(parent, height=2).grid(row=1, column=0)
         self._grid_frame.grid(row=2, column=0)
+
+    def on_keypress(self, event):
+        self._controller.handle_key_press(event)
 
     def set_crypto_string(self, crypto_string):
         self._grid_view.set_crypto_string(crypto_string)
@@ -39,7 +45,7 @@ class GridView(object):
         self._controller = controller
 
     def set_crypto_string(self, crypto_string):
-        for (index, letter) in enumerate(crypto_string):  # TODO duplicated in KeyView init
+        for (index, letter) in enumerate(crypto_string):  # TODO basically duplicated in KeyView init
             row = index / LETTER_WIDTH
             column = index % LETTER_WIDTH
             frame = Tkinter.Frame(self._parent_frame)
@@ -59,7 +65,7 @@ class LetterView(object):
         self._controller = controller
         self._crypto_letter_label = Tkinter.Label(self._parent_frame, text=self._crypto_letter, width=4, relief=Tkinter.RAISED)
         self._crypto_letter_label.grid(row=0, column=0)
-        self._plaintext_label = Tkinter.Label(self._parent_frame, text=self._plaintext_letter, bg='gray80', width=4, relief=Tkinter.SUNKEN)
+        self._plaintext_label = Tkinter.Label(self._parent_frame, text=self._plaintext_letter, bg=BASE_COLOR, width=4, relief=Tkinter.SUNKEN)
         if self._is_alpha:
             self._controller.register_letter(self)
             self._plaintext_label.bind("<Button-1>", self._on_click)
@@ -77,7 +83,7 @@ class LetterView(object):
             self._plaintext_label.config(text=letter)
 
     def select(self):
-        self._plaintext_label.config(bg='yellow')
+        self._plaintext_label.config(bg=SELECTED_COLOR)
 
     def deselect(self):
-        self._plaintext_label.config(bg='gray80')
+        self._plaintext_label.config(bg=BASE_COLOR)
