@@ -11,41 +11,31 @@ class CryptogramView(object):
         self._controller = controller
         self._parent = parent
         self._parent.bind_all('<Any-KeyPress>', self.on_keypress)
+        
         self._key_frame = Tkinter.Frame(parent)
-        self._key_view = KeyView(self._key_frame, self._controller)
-        self._grid_frame = Tkinter.Frame(parent)
-        self._grid_view = GridView(self._grid_frame, self._controller)
+        self._key_grid = LetterGrid(self._key_frame, self._controller)
+        self._key_grid.set_letters(Cryptogram.ALPHABET)
+        self._puzzle_frame = Tkinter.Frame(parent)
+        self._puzzle_grid = LetterGrid(self._puzzle_frame, self._controller)
+
         self._key_frame.grid(row=0, column=0)
         Tkinter.Label(parent, height=2).grid(row=1, column=0)
-        self._grid_frame.grid(row=2, column=0)
+        self._puzzle_frame.grid(row=2, column=0)
 
     def on_keypress(self, event):
         self._controller.handle_key_press(event)
 
     def set_crypto_string(self, crypto_string):
-        self._grid_view.set_crypto_string(crypto_string)
+        self._puzzle_grid.set_letters(crypto_string)
 
 
-class KeyView(object):
-    def __init__(self, parent_frame, controller):
-        self._parent_frame = parent_frame
-        self._controller = controller
-        for (index, letter) in enumerate(Cryptogram.ALPHABET):
-            row = index / LETTER_WIDTH
-            column = index % LETTER_WIDTH
-            frame = Tkinter.Frame(self._parent_frame)
-            letter_view = LetterView(frame, letter, self._controller)
-            self._controller.register_letter(letter_view)
-            frame.grid(row=row, column=column)
-
-
-class GridView(object):
+class LetterGrid(object):
     def __init__(self, parent_frame, controller):
         self._parent_frame = parent_frame
         self._controller = controller
 
-    def set_crypto_string(self, crypto_string):
-        for (index, letter) in enumerate(crypto_string):  # TODO basically duplicated in KeyView init
+    def set_letters(self, letters):
+        for (index, letter) in enumerate(letters):
             row = index / LETTER_WIDTH
             column = index % LETTER_WIDTH
             frame = Tkinter.Frame(self._parent_frame)
