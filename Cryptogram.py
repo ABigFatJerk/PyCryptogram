@@ -13,11 +13,10 @@ class Cryptogram(object):
         self._selected_letter = None
         self._view = CryptogramView.CryptogramView(self, self._parent)
         self._model = CryptogramModel.CryptogramModel(self)
-        self._setup_new_game()
+        self._setup_new_game() # TODO would be separate call
 
     def _setup_new_game(self):
-        self._view.set_crypto_string("THE QUICK BROWN. FOX JUMPS, OVER THE LAZY! DOG")
-        pass
+        self._view.set_crypto_string(self._model.generate_crypto_string())
 
     def register_letter(self, letter_view):
         self._letter_dict[letter_view.get_crypto_letter()].append(letter_view)
