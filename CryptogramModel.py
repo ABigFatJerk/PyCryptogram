@@ -1,3 +1,5 @@
+import Cryptogram
+
 class CryptogramModel(object):
     def __init__(self, controller):
         self._controller = controller
@@ -9,12 +11,21 @@ class CryptogramModel(object):
         return self._crypto_string
 
     def _select_plaintext_string(self):
-        return "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG"
+        return "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG" # TODO for real
 
 
 class CryptogramMapping(object):
     def __init__(self):
-        pass
+        self._mapping = self._generate_mapping()
 
     def encrypt(self, plaintext_string):
-        return plaintext_string
+        crypto_string = ''
+        for char in plaintext_string:
+            if char in Cryptogram.ALPHABET:
+                crypto_string += self._mapping[char]
+            else:
+                crypto_string += char
+        return crypto_string
+
+    def _generate_mapping(self):
+        return {el: el for el in Cryptogram.ALPHABET} # TODO for real
