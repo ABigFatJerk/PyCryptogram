@@ -16,7 +16,7 @@ class Cryptogram(object):
         self._setup_new_game() # TODO would be separate call
 
     def _setup_new_game(self):
-        self._view.set_crypto_string(self._model.generate_crypto_string())
+        self._view.set_crypto_string(self._model.get_crypto_string())
 
     def register_letter(self, letter_view):
         self._letter_dict[letter_view.get_crypto_letter()].append(letter_view)
