@@ -1,11 +1,12 @@
 import Cryptogram
+import random
 
 class CryptogramModel(object):
     def __init__(self, controller):
         self._controller = controller
         self._plaintext_string = self._select_plaintext_string()
         self._crypto_mapping = CryptogramMapping()
-        self._crypto_string = self._crypto_mapping.encrypt(self._plaintext_string);
+        self._crypto_string = self._crypto_mapping.encrypt(self._plaintext_string)
 
     def get_crypto_string(self):
         return self._crypto_string
@@ -28,4 +29,6 @@ class CryptogramMapping(object):
         return crypto_string
 
     def _generate_mapping(self):
-        return {el: el for el in Cryptogram.ALPHABET} # TODO for real
+        alphabet_copy = list(Cryptogram.ALPHABET)
+        random.shuffle(alphabet_copy) # TODO need to prevent a mapping where a letter maps to itself
+        return {plain: crypto for (plain, crypto) in zip(Cryptogram.ALPHABET, alphabet_copy)}
